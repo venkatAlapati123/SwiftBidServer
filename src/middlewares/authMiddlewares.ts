@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomRequest, ForgotPasswordType } from "../types";
+import { CustomRequest, ForgotPasswordType, User } from "../types";
 import { UserModel } from "../models/user";
 
 export const isUserEmailExists = async (
@@ -17,6 +17,6 @@ export const isUserEmailExists = async (
     });
   }
 
-  req.user = existingUser;
+  req.user = existingUser as User;
   next();
 };
