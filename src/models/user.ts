@@ -34,6 +34,9 @@ var userSchema = new Schema({
   country: {
     type: String,
   },
+  otp: {
+    type: String,
+  },
 });
 
 export const UserModel = mongoose.model("swiftbiduser", userSchema);

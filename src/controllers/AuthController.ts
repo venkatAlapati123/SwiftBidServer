@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "../models/user";
 import { JwtHelper } from "../utils/JwtHelper";
+import { CustomRequest } from "../types";
+import { generateOtp } from "../utils/commonUtils";
+import { EmailConfig } from "../config/EmailConfig";
 
 export class AuthController {
   /**
@@ -24,6 +27,33 @@ export class AuthController {
     //TODO perform all logics here
     return res.json({
       token: JwtHelper.createToken({ id: "testid" }),
+    });
+  }
+
+  static async forgotPassword(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+    if (!req.user)
+      return res.status(404).json({
+        mesage: "User not Exists.",
+      });
+
+    const { email, id } = req.user;
+    const otp = generateOtp();
+    await EmailConfig.sendEmail(
+      email,
+      "RESET PASSWORD",
+      `OTP to Reset your password in  ${otp}`
+    );
+
+    await UserModel.findByIdAndUpdate(id, {
+      otp,
+    });
+
+    return res.json({
+      mesage: "OTP Successfully sent to " + email,
     });
   }
 }
