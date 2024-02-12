@@ -5,6 +5,7 @@ import { EmailConfig } from "./config/EmailConfig";
 import MongoClient from "./config/MongoConfig";
 import dotenv from "dotenv";
 import { userAuthRoutes } from "./routehandlers/userAuthRoutes";
+import { BadRequest, NotFound } from "./utils/exceptions";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,9 +27,12 @@ app.use("/auth", userAuthRoutes);
  * Global Error Handler for complete app.
  * If any of the routes failed to handle error the control will be trnasfered to this middleware.
  */
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  return res.status(500).json({ message: "Internal Server Error" });
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof BadRequest || err instanceof NotFound) {
+    res.status(err.statusCode).json({ error: err.message });
+  } else {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 // Initializations..

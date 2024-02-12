@@ -5,6 +5,7 @@ import { CustomRequest } from "../types";
 import { generateOtp } from "../utils/commonUtils";
 import { EmailConfig } from "../config/EmailConfig";
 import bcrypt from 'bcrypt';
+import { BadRequest } from "../utils/exceptions";
 
 export class AuthController {
   /**
@@ -26,26 +27,26 @@ export class AuthController {
    */
   static async login(req: Request, res: Response, next: NextFunction) {
     try{
-     const {email,password} = req.body;
+      const {email,password} = req.body;
 
-     const user = await UserModel.findOne({email});
+      const user = await UserModel.findOne({email});
 
-     if(!user){
-      return res.status(404).json({error:"User not found"});
-     }
+      if(!user){
+        return res.status(404).json({error:"User not found"});
+      }
 
-     const match = await bcrypt.compare(password, user.password);
-     if (!match) {
-       return res.status(401).json({ error: "Incorrect password" });
-     }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+        return res.status(401).json({ error: "Incorrect password" });
+      }
 
-    return res.json({
-      token: JwtHelper.createToken({ id: user._id }),
-    });
-  }
+      return res.json({
+        token: JwtHelper.createToken({ id: user._id }),
+      });
+    }
   catch(error){
-    return res.status(500).json({error:"Internal server error"});
-  }
+      return res.status(500).json({error:"Internal server error"});
+    }
   }
 
   static async signup(req: Request,res:Response,next:NextFunction){
@@ -75,10 +76,8 @@ export class AuthController {
     res: Response,
     next: NextFunction
   ) {
-    if (!req.user)
-      return res.status(404).json({
-        mesage: "User not Exists.",
-      });
+    try {
+      if (!req.user) throw new BadRequest("User not Exist");
 
     const { email, id } = req.user;
     const otp = generateOtp();
@@ -93,7 +92,10 @@ export class AuthController {
     });
 
     return res.json({
-      mesage: "OTP Successfully sent to " + email,
+      message: "OTP Successfully sent to " + email,
     });
+    } catch (error) {
+      next(error)
+    }
   }
 }

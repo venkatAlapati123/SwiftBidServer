@@ -21,3 +21,14 @@ export interface CustomRequest extends Request {
 export interface ForgotPasswordType {
     email: string
 }
+
+export interface LoginRequest {
+    email: string
+    password: string
+}
+
+export interface SignUpRequest {
+    username: string
+    email: string
+    password: string
+}
