@@ -9,5 +9,6 @@ router.post("/login", AuthController.login)
 router.post("/signup",AuthController.signup)
 
 router.post("/forgotpassword", isUserEmailExists, AuthController.forgotPassword)
+router.post("/resetpassword",AuthController.resetPassword)
 
 export const userAuthRoutes = router;
