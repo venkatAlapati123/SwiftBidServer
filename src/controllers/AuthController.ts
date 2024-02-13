@@ -98,4 +98,41 @@ export class AuthController {
       next(error)
     }
   }
+  static async resetPassword(
+    req: CustomRequest,
+    res: Response,
+    next: NextFunction
+  ) {
+
+    try{
+      const {email,password,otp} = req.body;
+
+      const user = await UserModel.findOne({email});
+
+      if(!user){
+        throw new BadRequest("User not Exist");
+      }
+      if(user.otp!==otp){
+        throw new BadRequest("Invalid OTP!!!");
+      }
+      if(!password)
+      {
+        throw new BadRequest("Invalid Password");
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await UserModel.findByIdAndUpdate(user.id, {
+        password:hashedPassword,
+        otp:""
+      });
+
+      return res.json({
+        message: "Password Updated successdfully"
+      });
+    }
+  catch(error){
+    next(error)
+  }
+  }
+  
+
 }
