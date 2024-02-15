@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema
 var userSchema = new Schema({
   username: {
     type: String,
@@ -21,7 +21,7 @@ var userSchema = new Schema({
   role: {
     type: String,
     required: true,
-    default: 'regular'
+    default: "regular",
   },
   password: {
     type: String,
@@ -30,7 +30,7 @@ var userSchema = new Schema({
   province: {
     type: String,
   },
-  City: {
+  city: {
     type: String,
   },
   postalcode: {
@@ -42,6 +42,6 @@ var userSchema = new Schema({
   otp: {
     type: String,
   },
-});
+})
 
-export const UserModel = mongoose.model("swiftbiduser", userSchema);
+export const UserModel = mongoose.model("swiftbiduser", userSchema)

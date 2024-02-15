@@ -1,34 +1,35 @@
 import { Request } from "express"
 
 export interface User {
-    id: string;
-    username?: string;
-    email: string;
-    mobile: string;
-    address: string;
-    role: string;
-    password: string;
-    province: string;
-    City: string;
-    postalcode: string;
-    country: string;
-    otp: string;
-  }
+  id: string
+  username?: string
+  email: string
+  mobile: string
+  address: string
+  role: string
+  password: string
+  province: string
+  city: string
+  postalcode: string
+  country: string
+  otp: string
+}
 export interface CustomRequest extends Request {
-    user?: User
+  user?: User
+  userId?: string
 }
 
 export interface ForgotPasswordType {
-    email: string
+  email: string
 }
 
 export interface LoginRequest {
-    email: string
-    password: string
+  email: string
+  password: string
 }
 
 export interface SignUpRequest {
-    username: string
-    email: string
-    password: string
+  username: string
+  email: string
+  password: string
 }
